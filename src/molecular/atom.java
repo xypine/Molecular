@@ -21,6 +21,8 @@ public class atom {
     public float mass = 1F;
     public float id;
     
+    public boolean remove = false;
+    
     private Molecular parent;
     
     public atom(Point2Int position, Molecular parent) {
@@ -39,6 +41,9 @@ public class atom {
      * 2: anti-solid, like rock but with inverse gravity
      * 3: gas, like liquid but with inverse gravity
      * 4: no gravity
+     * 
+     * 8: Player
+     * 9: remover
      */
     public int state = 0;
     
@@ -56,7 +61,7 @@ public class atom {
         if (state == 4){
             gm = 0;
         }
-        if(state == 0 || state == 2){
+        if(state == 0 || state == 2 || state == 9){
             sm = 0; //Do not use sidesteps
         }
         if(escape_nocoll){
@@ -93,10 +98,13 @@ public class atom {
                 color = Color.gray;
                 break;
             case 3:
-                color = Color.red;
+                color = Color.CYAN;
                 break;
             case 4:
                 color = Color.green;
+                break;
+            case 9:
+                color = Color.red;
                 break;
         }
         if(escape_nocoll){
@@ -195,6 +203,14 @@ public class atom {
                     Tcoll.collider.state = 0;
                 } catch (Exception e) {
                 }
+            }
+        }
+        if(Tout){
+            if(state == 9 && Tcoll.state != 9){
+                Tcoll.remove = true;
+            }
+            if(state != 9 && Tcoll.state == 9){
+                remove = true;
             }
         }
         if(escape_nocoll && c2 == 0){

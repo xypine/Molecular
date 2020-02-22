@@ -6,11 +6,8 @@
 package molecular;
 
 import JFUtils.Input;
-import JFUtils.point.Point2D;
 import JFUtils.point.Point2Int;
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.FlowLayout;
 import java.awt.HeadlessException;
 import java.util.LinkedList;
 import java.util.logging.Level;
@@ -30,7 +27,7 @@ public class Molecular extends JFrame{
     public static void main(String[] args) {
         // TODO code application logic here
         System.out.println("Using JFUtils v." + JFUtils.versionCheck.version);
-        new Molecular();
+        Molecular molecular = new Molecular();
     }
     
     LinkedList<atom> atoms = new LinkedList<>();
@@ -68,7 +65,7 @@ public class Molecular extends JFrame{
     
     int ticks = 0;
     
-    int res = 4;
+    int res = 3;
     
     void startLogic(){
         //atoms.add(new atom(new Point2Int(10, 10), this));
@@ -92,12 +89,18 @@ public class Molecular extends JFrame{
     int brush = 0;
     void tick(){
         spawn = true;
+        LinkedList<atom> newA = new LinkedList<>();
         atoms.forEach(l -> {
             l.update();
+            if(!l.remove){
+                newA.add(l);
+                //atoms.remove(l);
+            }
             if(l.position.x == 10 && l.position.y == 10){
                 spawn = false;
             }
         });
+        atoms = newA;
         if(ticks < 1200 && spawn){
             //atoms.add(new atom(new Point2Int(10, 10), this));
         }
@@ -147,6 +150,11 @@ public class Molecular extends JFrame{
         //5
         if (input.keys[49+4]) {
             brush = 4;
+        }
+        
+        //9
+        if (input.keys[49+8]) {
+            brush = 9;
         }
         
         ticks++;
